@@ -6,17 +6,22 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [tailwindcss(), react()],
 
+  // KONFIGURASI PROXY INI HANYA UNTUK DEVELOPMENT LOKAL
+  // TIDAK BERPENGARUH DI VERCEL
   server: {
     proxy: {
       "/api": {
+        // Pastikan target ini sesuai dengan server API lokal Anda
         target: "http://localhost:3001",
         changeOrigin: true,
       },
     },
   },
 
-  // 🔑 Tambahkan ini
+  // TAMBAHKAN BAGIAN INI UNTUK MEMASTIKAN KOMPATIBILITAS BROWSER
   build: {
-    target: "es2020",
+    // Target 'es2015' akan mengonversi kode Anda ke sintaks yang
+    // didukung oleh sebagian besar browser selama bertahun-tahun.
+    target: "es2015",
   },
 });
