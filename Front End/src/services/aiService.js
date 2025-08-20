@@ -1,7 +1,8 @@
 // aiservices.js
 
 export const sendMessageToAI = async (message) => {
-  const res = await fetch("http://localhost:3001/api/chat", {
+  // Cukup gunakan path relatif "/api/chat"
+  const res = await fetch("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message }),
