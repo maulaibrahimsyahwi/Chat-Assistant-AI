@@ -28,3 +28,4 @@ yarn-error.log*
 # Abaikan file sistem operasi
 .DS_Store
 Thumbs.db
+.vercel
