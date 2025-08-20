@@ -6,7 +6,6 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [tailwindcss(), react()],
 
-  // TAMBAHKAN BAGIAN INI
   server: {
     proxy: {
       "/api": {
@@ -14,5 +13,10 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+  },
+
+  // 🔑 Tambahkan ini
+  build: {
+    target: "es2020",
   },
 });
