@@ -1,0 +1,30 @@
+# Abaikan semua file Environment Variables (PENTING UNTUK KEAMANAN)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+frontend/.env
+
+# Abaikan semua folder dependencies (Folder ini ukurannya sangat besar)
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Abaikan folder hasil build (Folder ini dibuat otomatis)
+dist/
+frontend/dist/
+build/
+frontend/build/
+.vercel/
+
+# Abaikan file log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Abaikan file sistem operasi
+.DS_Store
+Thumbs.db
