@@ -21,7 +21,7 @@ const replicate = new Replicate({
 });
 
 // Definisikan rute POST untuk /api/chat
-app.post("/api/chat", async (req, res) => {
+app.post("/chat", async (req, res) => {
   try {
     const { message } = req.body;
 
