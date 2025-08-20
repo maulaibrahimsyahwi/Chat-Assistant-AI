@@ -2,7 +2,7 @@
 
 import express from "express";
 import cors from "cors";
-import Replicate from "replicate"; // Pastikan Anda menggunakan Replicate atau Hugging Face
+import Replicate from "replicate";
 import dotenv from "dotenv";
 
 // Load environment variables
@@ -31,7 +31,8 @@ app.post("/api/chat", async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    const model = "meta/llama-3-8b-instruct"; // Gunakan model yang aktif
+    // Ganti dengan model yang aktif di Replicate
+    const model = "meta/llama-3-8b-instruct";
     const input = {
       prompt: `[INST] ${message} [/INST]`,
       max_new_tokens: 1024,
