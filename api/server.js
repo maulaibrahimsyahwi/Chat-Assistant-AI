@@ -5,16 +5,14 @@ import cors from "cors";
 import Replicate from "replicate";
 import dotenv from "dotenv";
 
-// Load environment variables
+// Load environment variables (Vercel akan otomatis menyediakannya)
 dotenv.config();
 
 // Inisialisasi aplikasi Express
 const app = express();
 
-// Gunakan CORS
+// Gunakan CORS dan JSON middleware
 app.use(cors());
-
-// Middleware untuk parse JSON
 app.use(express.json());
 
 // Inisialisasi Replicate
@@ -31,11 +29,10 @@ app.post("/api/chat", async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    // Ganti dengan model yang aktif di Replicate
+    // Gunakan model yang aktif dan terbukti
     const model = "meta/llama-3-8b-instruct";
     const input = {
-      prompt: `[INST] ${message} [/INST]`,
-      max_new_tokens: 1024,
+      prompt: message,
     };
 
     const output = await replicate.run(model, { input });
@@ -48,6 +45,5 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-// Export aplikasi Express agar Vercel bisa menggunakannya
-// Vercel akan secara otomatis menjalankan servernya.
+// Export aplikasi untuk Vercel
 export default app;
