@@ -5,17 +5,16 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": { "distDir": "dist" }
+    },
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node@18"
     }
   ],
-  "functions": {
-    "frontend/api/**/*.js": {
-      "runtime": "@vercel/node@18"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/frontend/api/$1"
+      "destination": "/api/$1"
     },
     {
       "source": "/(.*)",
