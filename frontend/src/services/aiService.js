@@ -1,12 +1,15 @@
 export async function sendMessageToAI(message) {
   try {
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ message }),
-    });
+    const response = await fetch(
+      "https://api-key-replicate.vercel.app/api/generate",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${await response.text()}`);
