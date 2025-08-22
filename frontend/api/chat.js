@@ -1,4 +1,3 @@
-// pages/api/chat.js
 import Replicate from "replicate";
 
 const replicate = new Replicate({
@@ -13,18 +12,14 @@ export default async function handler(req, res) {
   try {
     const { message } = req.body;
 
-    const output = await replicate.run("ibm-granite/granite-3.3-8b-instruct", {
-      input: {
-        prompt: message,
-        max_new_tokens: 200,
-      },
-    });
+    const output = await replicate.run(
+      "ibm-granite/granite-3.3-8b-instruct", // ganti model id
+      { input: { prompt: message } }
+    );
 
-    const reply = Array.isArray(output) ? output.join("") : String(output);
-
-    res.status(200).json({ reply, timestamp: new Date().toISOString() });
-  } catch (err) {
-    console.error("Backend Error:", err);
-    res.status(500).json({ error: err.message });
+    res.status(200).json({ reply: output.join(" ") });
+  } catch (error) {
+    console.error("Backend Error:", error);
+    res.status(500).json({ error: error.message });
   }
 }
