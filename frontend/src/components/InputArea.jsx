@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send } from "lucide-react";
-
+import { SendHorizontal } from "lucide-react";
 const InputArea = ({ onSendMessage, isLoading }) => {
   const [inputText, setInputText] = useState("");
   const inputRef = useRef(null);
