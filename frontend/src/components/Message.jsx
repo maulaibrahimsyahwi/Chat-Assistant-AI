@@ -573,23 +573,21 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
               >
                 <button
                   onClick={handleSaveEdit}
-                  className="flex items-center space-x-1 px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded-md transition-colors"
+                  className="flex items-center space-x-1 px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs rounded-md transition-colors"
                   disabled={!editText.trim()}
                 >
-                  <Check className="w-3 h-3" />
                   <span>Simpan</span>
                 </button>
                 <button
                   onClick={handleCancelEdit}
-                  className="flex items-center space-x-1 px-2 py-1 bg-gray-400 hover:bg-gray-500 text-white text-xs rounded-md transition-colors"
+                  className="flex items-center space-x-1 px-2 py-1 bg-red-400 hover:bg-red-500 text-white text-xs rounded-md transition-colors"
                 >
-                  <X className="w-3 h-3" />
                   <span>Batal</span>
                 </button>
               </div>
 
               <p className="text-xs text-gray-400 px-1">
-                Tekan Enter untuk simpan, Escape untuk batal
+                Tekan Enter untuk simpan, Esc untuk batal
               </p>
             </div>
           ) : (
@@ -654,7 +652,7 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
               </div>
 
               {message.isRegenerated && (
-                <div className="flex items-center space-x-1 mt-1 text-xs text-yellow-600">
+                <div className="flex items-center space-x-1 mt-1 text-xs ">
                   <RotateCcw className="w-3 h-3" />
                   <span>Pertanyaan diperbarui</span>
                 </div>
