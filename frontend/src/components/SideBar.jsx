@@ -313,7 +313,7 @@ const Sidebar = ({
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => setActiveMenu("chat")}
-                  className="p-1 rounded-lg hover:bg-white/50 transition-colors"
+                  className="p-1 rounded-lg hover:bg-white/50 transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4 text-gray-600" />
                 </button>
@@ -352,7 +352,7 @@ const Sidebar = ({
             <div className="p-4 border-b border-gray-200 flex items-center space-x-3 bg-gradient-to-r from-gray-50 to-slate-50">
               <button
                 onClick={() => setActiveMenu("chat")}
-                className="p-1 rounded-lg hover:bg-white/50 transition-colors"
+                className="p-1 rounded-lg hover:bg-white/50 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4 text-gray-600" />
               </button>
@@ -384,7 +384,7 @@ const Sidebar = ({
             <div className="p-4 border-b border-gray-200 flex items-center space-x-3 bg-gradient-to-r from-blue-50 to-cyan-50">
               <button
                 onClick={() => setActiveMenu("chat")}
-                className="p-1 rounded-lg hover:bg-white/50 transition-colors"
+                className="p-1 rounded-lg hover:bg-white/50 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4 text-gray-600" />
               </button>
@@ -710,7 +710,7 @@ const Sidebar = ({
           onClick={onToggle}
           className="fixed top-4 left-4 z-30 lg:hidden p-3 bg-white rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition-shadow"
         >
-          <Menu className="w-5 h-5 text-gray-600" />
+          <Menu className="w-5 h-5 text-gray-600 cursor-pointer" />
           {(conversationCount > 0 || chatHistories.length > 0) && (
             <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
               {chatHistories.length || conversationCount}

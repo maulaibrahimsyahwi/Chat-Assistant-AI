@@ -666,7 +666,7 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
 
       {/* Indikator "Pertanyaan diperbarui" - sebagai elemen terpisah yang benar-benar di tengah */}
       {message.isRegenerated && (
-        <div className="w-full flex justify-center mt-1 mb-2">
+        <div className="w-full flex justify-center mt-1 mb-4">
           <div className="flex items-center text-xs text-amber-600 bg-amber-50 rounded-full px-3 py-1 border border-amber-200 shadow-sm">
             <RotateCcw className="w-3 h-3 mr-1" />
             <span>Pertanyaan diperbarui</span>
