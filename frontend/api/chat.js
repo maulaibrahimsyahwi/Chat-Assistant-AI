@@ -1,16 +1,30 @@
-async function askGranite() {
-  const res = await fetch("https://api-key-replicate.vercel.app/api/generate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: "Tuliskan pantun tentang koding!" }),
-  });
+// pages/api/chat.js
+import Replicate from "replicate";
 
-  const data = await res.json();
-  console.log("Full Response:", data); // 👈 cek format aslinya
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
+});
 
-  // Kalau memang ada field 'reply'
-  if (data.reply) {
-    console.log("AI Reply:", data.reply);
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  try {
+    const { message } = req.body;
+
+    const output = await replicate.run("ibm-granite/granite-3.3-8b-instruct", {
+      input: {
+        prompt: message,
+        max_new_tokens: 200,
+      },
+    });
+
+    const reply = Array.isArray(output) ? output.join("") : String(output);
+
+    res.status(200).json({ reply, timestamp: new Date().toISOString() });
+  } catch (err) {
+    console.error("Backend Error:", err);
+    res.status(500).json({ error: err.message });
   }
 }
-askGranite();
