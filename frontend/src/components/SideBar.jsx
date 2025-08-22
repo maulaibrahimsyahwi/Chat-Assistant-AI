@@ -123,7 +123,7 @@ const Sidebar = ({
       icon: History,
       label: "Riwayat Chat",
       action: () => handleMenuNavigation("history"),
-      color: "text-purple-600 hover:text-purple-700 hover:bg-purple-50",
+      color: "text-gray-600 hover:text-gray-700 hover:bg-gray-50",
       badge: chatHistories.length > 0 ? chatHistories.length : null,
       active: true,
     },

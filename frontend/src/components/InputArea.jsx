@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { SendHorizontal } from "lucide-react";
+import { SendHorizonal } from "lucide-react";
 const InputArea = ({ onSendMessage, isLoading }) => {
   const [inputText, setInputText] = useState("");
   const inputRef = useRef(null);
@@ -76,9 +76,9 @@ const InputArea = ({ onSendMessage, isLoading }) => {
         <button
           onClick={handleSend}
           disabled={!inputText.trim() || isLoading}
-          className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-2 rounded-lg hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center"
+          className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-2 rounded-lg hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center self-center"
         >
-          <SendHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
+          <SendHorizonal className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
       <p className="text-xs text-gray-500 mt-1 sm:mt-2 px-1 hidden sm:block">
