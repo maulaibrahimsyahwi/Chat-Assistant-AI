@@ -440,7 +440,7 @@ const Sidebar = ({
           <div className="flex items-center justify-between">
             <button
               onClick={handleSidebarToggle}
-              className="p-2 rounded-lg hover:bg-white/50 transition-colors flex items-center justify-center"
+              className="p-2 rounded-lg hover:bg-white/50 transition-colors flex items-center justify-center cursor-pointer"
               title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
             >
               <Menu
@@ -708,9 +708,9 @@ const Sidebar = ({
       {collapsed && (
         <button
           onClick={onToggle}
-          className="fixed top-4 left-4 z-30 lg:hidden p-3 bg-white rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition-shadow"
+          className="fixed top-4 left-4 z-30 lg:hidden p-3 bg-white rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition-shadow cursor-pointer"
         >
-          <Menu className="w-5 h-5 text-gray-600 cursor-pointer" />
+          <Menu className="w-5 h-5 text-gray-600" />
           {(conversationCount > 0 || chatHistories.length > 0) && (
             <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
               {chatHistories.length || conversationCount}
