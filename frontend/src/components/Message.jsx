@@ -619,9 +619,9 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
                   )}
                 </div>
 
-                {/* Action buttons di sebelah bubble */}
+                {/* Action buttons di sebelah bubble - Always visible pada lg ke bawah, hover untuk lg ke atas */}
                 <div
-                  className={`flex flex-col items-center justify-start space-y-1 opacity-0 group-hover:opacity-100 transition-opacity ${
+                  className={`flex flex-col items-center justify-start space-y-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity ${
                     isUser ? "mr-2" : "ml-2"
                   } mt-1`}
                 >
