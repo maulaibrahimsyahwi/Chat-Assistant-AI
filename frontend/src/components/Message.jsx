@@ -544,17 +544,15 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
           <div className="flex items-center justify-end space-x-3">
             <button
               onClick={handleSaveEdit}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
               disabled={!editText.trim()}
             >
-              <Check className="w-4 h-4" />
               <span>Simpan</span>
             </button>
             <button
               onClick={handleCancelEdit}
-              className="flex items-center space-x-2 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+              className="flex items-center space-x-2 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors cursor-pointer"
             >
-              <X className="w-4 h-4" />
               <span>Batal</span>
             </button>
           </div>
@@ -607,10 +605,6 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
                     message.sender === "ai"
                       ? "bg-gray-100 text-gray-800"
                       : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
-                  } ${
-                    message.isRegenerated
-                      ? "border-2 border-yellow-400 shadow-lg"
-                      : ""
                   }`}
                 >
                   {isAI ? (
