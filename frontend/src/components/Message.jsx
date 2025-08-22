@@ -636,9 +636,7 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
                     title={copied ? "Disalin!" : "Salin pesan"}
                   >
                     <Copy
-                      className={`w-3 h-3 cursor-pointer ${
-                        copied ? "text-green-500" : ""
-                      }`}
+                      className={`w-3 h-3 ${copied ? "text-green-500" : ""}`}
                     />
                   </button>
 

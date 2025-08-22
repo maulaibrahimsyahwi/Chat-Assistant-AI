@@ -146,6 +146,109 @@ const ChatContainer = () => {
     });
   };
 
+  // Function untuk handle edit message
+  const handleEditMessage = async (messageId, newText) => {
+    // Cari index pesan yang akan diedit
+    const messageIndex = messages.findIndex((m) => m.id === messageId);
+    if (messageIndex === -1) return;
+
+    // Pastikan ini adalah pesan user terakhir
+    const isLastUserMessage =
+      messages[messageIndex].sender === "user" &&
+      messageIndex === messages.findLastIndex((m) => m.sender === "user");
+
+    if (!isLastUserMessage) return;
+
+    // Update pesan dengan text baru dan tandai sebagai regenerated
+    const updatedMessage = {
+      ...messages[messageIndex],
+      text: newText,
+      isRegenerated: true,
+      timestamp: new Date(),
+    };
+
+    // Hapus semua pesan setelah pesan yang diedit (termasuk response AI)
+    const messagesBeforeEdit = messages.slice(0, messageIndex);
+    const newMessages = [...messagesBeforeEdit, updatedMessage];
+
+    setMessages(newMessages);
+    setIsLoading(true);
+
+    // Update conversation history - hapus percakapan setelah pesan yang diedit
+    const conversationBeforeEdit = conversationHistory.slice(0, messageIndex);
+    setConversationHistory(conversationBeforeEdit);
+
+    try {
+      // Kirim pesan yang sudah diedit ke AI
+      const aiResponse = await sendMessageToAI(newText, conversationBeforeEdit);
+
+      const aiMessage = {
+        id: Date.now() + 1,
+        text: aiResponse,
+        sender: "ai",
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => {
+        const finalMessages = [...prev, aiMessage];
+
+        // Auto-save chat setelah edit dan AI response
+        setTimeout(() => {
+          const chatTitle =
+            currentChatTitle === "Chat Baru"
+              ? generateChatTitle(newText)
+              : currentChatTitle;
+
+          const currentChat = {
+            id: currentChatId,
+            title: chatTitle,
+            messages: finalMessages,
+            conversationHistory: [
+              ...conversationBeforeEdit,
+              { role: "user", content: newText },
+              { role: "assistant", content: aiResponse },
+            ],
+            timestamp: currentChatId
+              ? chatHistories.find((c) => c.id === currentChatId)?.timestamp ||
+                new Date().toISOString()
+              : new Date().toISOString(),
+            lastUpdated: new Date().toISOString(),
+            messageCount: finalMessages.length,
+          };
+
+          updateChatHistories(currentChat);
+        }, 100);
+
+        return finalMessages;
+      });
+
+      // Update conversation history dengan percakapan baru
+      setConversationHistory((prev) => {
+        const newHistory = [
+          ...conversationBeforeEdit,
+          { role: "user", content: newText },
+          { role: "assistant", content: aiResponse },
+        ];
+
+        if (newHistory.length > 20) {
+          return newHistory.slice(-20);
+        }
+        return newHistory;
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      const errorMessage = {
+        id: Date.now() + 1,
+        text: "Maaf, terjadi kesalahan saat menghubungi AI. Silakan coba lagi.",
+        sender: "ai",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSendMessage = async (inputText) => {
     if (!inputText.trim() || isLoading) return;
 
@@ -361,6 +464,7 @@ const ChatContainer = () => {
               isLoading={isLoading}
               messagesEndRef={messagesEndRef}
               showWelcome={showWelcome}
+              onEditMessage={handleEditMessage}
             />
             <InputArea
               onSendMessage={handleSendMessage}
