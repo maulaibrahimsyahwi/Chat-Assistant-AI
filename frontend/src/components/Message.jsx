@@ -257,12 +257,14 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
         .map((h) => h.trim())
         .filter((h) => h);
       const separatorRow = tableLines[1];
-      const dataRows = tableLines.slice(2).map((row) =>
-        row
+      const dataRows = tableLines.slice(2).map((row) => {
+        const cells = row
           .split("|")
-          .map((cell) => cell.trim())
-          .filter((cell) => cell)
-      );
+          .map((c) => c.trim())
+          .filter(Boolean);
+        while (cells.length < headers.length) cells.push(""); // isi kosong
+        return cells.slice(0, headers.length);
+      });
 
       return {
         hasTable: true,
@@ -384,14 +386,13 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
 
     const renderTextWithMath = (content) => {
       const mathPatterns = [
-        /(\$\$[\s\S]*?\$\$)/g,
-        /(\\\[[\s\S]*?\\\])/g,
-        /(\$[^$\n]+?\$)/g,
-        /(\\\([^)]*?\\\))/g,
-        /(\\displaystyle[^()]*?(?:\([^)]*\))?[^.]*?\.)/g,
-        /(\\frac\{[^}]*\}\{[^}]*\}[^.]*?\.)/g,
-        /(\\sqrt\{[^}]*\})/g,
-        /(\\[a-zA-Z]+\{[^}]*\})/g,
+        /\$\$[\s\S]+?\$\$/g, // $$ block
+        /\\\[[\s\S]+?\\\]/g, // \[...\] block
+        /\$[^$\n]+?\$/g, // $...$ inline
+        /\\\([^)]*?\\\)/g, // \(...\) inline
+        /\\frac\{[^{}]+\}\{[^{}]+\}/g, // fraction
+        /\\sqrt\{[^{}]+\}/g, // sqrt
+        /\\[a-zA-Z]+\{[^{}]+\}/g, // \command{...}
       ];
 
       let processedContent = content;
