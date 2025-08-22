@@ -545,15 +545,6 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
         <div className="relative">
           {isEditing ? (
             <div className="space-y-2">
-              {/* Tombol Edit (hanya untuk user message terakhir) saat editing */}
-              <div
-                className={`absolute ${
-                  isUser ? "-left-12" : "-right-12"
-                } top-2 flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity`}
-              >
-                {/* Tombol edit saat mode editing tidak ditampilkan */}
-              </div>
-
               <div
                 className={`inline-block rounded-2xl max-w-full ${
                   isUser
@@ -603,10 +594,15 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
             </div>
           ) : (
             <div>
-              {/* Container pesan dengan posisi relative untuk icon */}
-              <div className="relative group/message">
+              {/* Container dengan flex untuk bubble dan action buttons */}
+              <div
+                className={`flex items-start ${
+                  isUser ? "flex-row-reverse" : ""
+                }`}
+              >
+                {/* Message bubble */}
                 <div
-                  className={`inline-block p-2 sm:p-3 rounded-2xl max-w-full relative ${
+                  className={`inline-block p-2 sm:p-3 rounded-2xl max-w-full ${
                     message.sender === "ai"
                       ? "bg-gray-100 text-gray-800"
                       : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
@@ -616,55 +612,44 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
                       : ""
                   }`}
                 >
-                  {/* Container untuk tombol-tombol action - sekarang di dalam bubble */}
-                  <div
-                    className={`absolute ${
-                      isUser ? "left-1 top-1" : "right-1 top-1"
-                    } flex items-center space-x-1 opacity-0 group-hover/message:opacity-100 transition-opacity z-10`}
+                  {isAI ? (
+                    <div className="text-xs sm:text-sm prose prose-sm max-w-none break-words">
+                      {renderEnhancedContent(message.text)}
+                    </div>
+                  ) : (
+                    <p className="text-xs sm:text-sm whitespace-pre-wrap break-words">
+                      {message.text}
+                    </p>
+                  )}
+                </div>
+
+                {/* Action buttons di sebelah bubble */}
+                <div
+                  className={`flex flex-col items-center justify-start space-y-1 opacity-0 group-hover:opacity-100 transition-opacity ${
+                    isUser ? "mr-2" : "ml-2"
+                  } mt-1`}
+                >
+                  {/* Tombol Copy */}
+                  <button
+                    onClick={handleCopyMessage}
+                    className="p-1 rounded-md hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+                    title={copied ? "Disalin!" : "Salin pesan"}
                   >
-                    {/* Tombol Copy */}
+                    <Copy
+                      className={`w-3 h-3 ${copied ? "text-green-500" : ""}`}
+                    />
+                  </button>
+
+                  {/* Tombol Edit (hanya untuk user message terakhir) */}
+                  {canEdit && !isEditing && (
                     <button
-                      onClick={handleCopyMessage}
-                      className={`p-1 rounded-md transition-colors ${
-                        isUser
-                          ? "hover:bg-blue-400/20 text-white/70 hover:text-white"
-                          : "hover:bg-gray-200 text-gray-400 hover:text-gray-600"
-                      }`}
-                      title={copied ? "Disalin!" : "Salin pesan"}
+                      onClick={handleStartEdit}
+                      className="p-1 rounded-md hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+                      title="Edit pesan"
                     >
-                      <Copy
-                        className={`w-3 h-3 ${copied ? "text-green-500" : ""}`}
-                      />
+                      <Edit3 className="w-3 h-3" />
                     </button>
-
-                    {/* Tombol Edit (hanya untuk user message terakhir) */}
-                    {canEdit && !isEditing && (
-                      <button
-                        onClick={handleStartEdit}
-                        className={`p-1 rounded-md transition-colors ${
-                          isUser
-                            ? "hover:bg-blue-400/20 text-white/70 hover:text-white"
-                            : "hover:bg-gray-200 text-gray-400 hover:text-gray-600"
-                        }`}
-                        title="Edit pesan"
-                      >
-                        <Edit3 className="w-3 h-3" />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Konten pesan */}
-                  <div className="relative">
-                    {isAI ? (
-                      <div className="text-xs sm:text-sm prose prose-sm max-w-none break-words">
-                        {renderEnhancedContent(message.text)}
-                      </div>
-                    ) : (
-                      <p className="text-xs sm:text-sm whitespace-pre-wrap break-words">
-                        {message.text}
-                      </p>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
 
