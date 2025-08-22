@@ -41,6 +41,13 @@
 **Vercel** membutuhkan konfigurasi khusus atau struktur Next.js untuk auto-detect API routes
 **Repository terpisah** memastikan backend di-deploy sebagai dedicated API server
 
+**Solution: Repository Terpisah**
+
+```
+frontend/          # React Vite - Deploy sebagai static site
+backend/           # Node.js Express - Deploy sebagai API server
+```
+
 > **Backend Repository:** [api-key-replicate](https://github.com/maulaibrahimsyahwi/api-key-replicate)
 
 #### 📁 Struktur Proyek Frontend
@@ -83,38 +90,7 @@ git clone https://github.com/maulaibrahimsyahwi/Chat-Assistant-AI.git
 cd Chat-Assistant-AI
 ```
 
-> ##### ⚠️ **Peringatan Keamanan**
->
-> **❌ JANGAN LAKUKAN (Berbahaya):**
-
-```javascript
-// ❌ DI FRONTEND - API Key akan terekspos!
-const REPLICATE_API_TOKEN = "r8_xxxxxxxxxxxxxxxxxxxx"; // BAHAYA!
-
-// ❌ Environment variable di Vite akan terbaca di browser
-const token = import.meta.env.VITE_REPLICATE_API_TOKEN; // BAHAYA!
-```
-
-**✅ CARA YANG BENAR:**
-
-```javascript
-// ✅ DI FRONTEND - Hanya komunikasi ke backend
-const response = await fetch("/api/generate", {
-  method: "POST",
-  body: JSON.stringify({ message }),
-});
-
-// ✅ API Key aman tersimpan di backend server
-```
-
-**Solution: Repository Terpisah**
-
-```
-frontend/          # React Vite - Deploy sebagai static site
-backend/           # Node.js Express - Deploy sebagai API server
-```
-
-#### 3. Setup Frontend
+#### 2. Setup Frontend
 
 ```bash
 # Install dependencies
@@ -174,10 +150,6 @@ export const sendMessage = async (message) => {
 
 ### 🚀 Backend API Endpoints
 
-Backend repository menyediakan endpoint berikut:
-
-**POST** `/api/generate`
-
 > **Detail API lengkap:** Lihat dokumentasi di [api-key-replicate repository](https://github.com/maulaibrahimsyahwi/api-key-replicate)
 
 #### Frontend
@@ -196,9 +168,9 @@ Backend repository menyediakan endpoint berikut:
 
 > Backend stack lengkap tersedia di [api-key-replicate](https://github.com/maulaibrahimsyahwi/api-key-replicate)
 
-### 🌐 Deployment
+#### 🌐 Deployment
 
-### Frontend Deployment (Vercel)
+##### Frontend Deployment (Vercel)
 
 1. **Build aplikasi:**
 
@@ -221,7 +193,7 @@ Backend repository menyediakan endpoint berikut:
    VITE_API_BASE_URL=https://your-backend-api.com/api
    ```
 
-### 🚀 Backend Deployment
+##### Backend Deployment
 
 Backend di-deploy secara terpisah. Ikuti panduan deployment di [api-key-replicate repository](https://github.com/maulaibrahimsyahwi/api-key-replicate).
 
@@ -240,13 +212,13 @@ const allowedOrigins = [
 // process.env.REPLICATE_API_TOKEN (server-side only)
 ```
 
-### 🔒 **Security Benefits:**
+#### 🔒 **Security Benefits:**
 
 **API Keys** **,** **Environment variables** **,** **CORS protection** **,** **Rate limiting**
 
-## ⚙️ Konfigurasi
+#### ⚙️ Konfigurasi
 
-### Environment Variables
+##### Environment Variables
 
 **Development (.env):**
 
