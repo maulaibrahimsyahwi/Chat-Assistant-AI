@@ -637,7 +637,9 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
                     title={copied ? "Disalin!" : "Salin pesan"}
                   >
                     <Copy
-                      className={`w-3 h-3 ${copied ? "text-green-500" : ""}`}
+                      className={`w-3 h-3 cursor-pointer ${
+                        copied ? "text-green-500" : ""
+                      }`}
                     />
                   </button>
 
@@ -648,7 +650,7 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
                       className="p-1 rounded-md hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
                       title="Edit pesan"
                     >
-                      <Edit3 className="w-3 h-3" />
+                      <Edit3 className="w-3 h-3 cursor-pointer" />
                     </button>
                   )}
                 </div>
