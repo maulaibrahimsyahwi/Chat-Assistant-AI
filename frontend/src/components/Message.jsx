@@ -2,13 +2,23 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { Bot, User, Edit3, Check, X, RotateCcw, Table } from "lucide-react";
+import {
+  Bot,
+  User,
+  Edit3,
+  Check,
+  X,
+  RotateCcw,
+  Table,
+  Copy,
+} from "lucide-react";
 import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
 
 const Message = ({ message, onEditMessage, isLastUserMessage }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(message.text);
+  const [copied, setCopied] = useState(false);
   const textareaRef = useRef(null);
 
   const isUser = message.sender === "user";
@@ -55,6 +65,31 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
       handleSaveEdit();
     } else if (e.key === "Escape") {
       handleCancelEdit();
+    }
+  };
+
+  // Function untuk copy pesan ke clipboard
+  const handleCopyMessage = async (e) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(message.text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset setelah 2 detik
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+      // Fallback untuk browser yang tidak support clipboard API
+      const textArea = document.createElement("textarea");
+      textArea.value = message.text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand("copy");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error("Fallback copy failed: ", err);
+      }
+      document.body.removeChild(textArea);
     }
   };
 
@@ -508,17 +543,32 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
         }`}
       >
         <div className="relative">
-          {canEdit && !isEditing && (
+          {/* Container untuk tombol-tombol action */}
+          <div
+            className={`absolute ${
+              isUser ? "-left-20" : "-right-20"
+            } top-2 flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity`}
+          >
+            {/* Tombol Copy */}
             <button
-              onClick={handleStartEdit}
-              className={`absolute ${
-                isUser ? "-left-8" : "-right-8"
-              } top-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-md hover:bg-gray-100 text-gray-400 hover:text-gray-600`}
-              title="Edit pesan"
+              onClick={handleCopyMessage}
+              className="p-1 rounded-md hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+              title={copied ? "Disalin!" : "Salin pesan"}
             >
-              <Edit3 className="w-3 h-3" />
+              <Copy className={`w-3 h-3 ${copied ? "text-green-500" : ""}`} />
             </button>
-          )}
+
+            {/* Tombol Edit (hanya untuk user message terakhir) */}
+            {canEdit && !isEditing && (
+              <button
+                onClick={handleStartEdit}
+                className="p-1 rounded-md hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+                title="Edit pesan"
+              >
+                <Edit3 className="w-3 h-3" />
+              </button>
+            )}
+          </div>
 
           {isEditing ? (
             <div className="space-y-2">
