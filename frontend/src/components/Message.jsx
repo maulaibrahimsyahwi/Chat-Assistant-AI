@@ -517,80 +517,83 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
     }
   };
 
-  return (
-    <div
-      className={`flex items-start space-x-2 sm:space-x-3 group ${
-        isUser ? "flex-row-reverse space-x-reverse" : ""
-      }`}
-    >
-      <div
-        className={`flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center ${
-          message.sender === "ai"
-            ? "bg-gradient-to-r from-blue-500 to-indigo-600"
-            : "bg-gradient-to-r from-gray-500 to-gray-600"
-        }`}
-      >
-        {message.sender === "ai" ? (
-          <Bot className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-        ) : (
-          <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-        )}
+  // Jika sedang editing, buat container penuh untuk textarea
+  if (isEditing) {
+    return (
+      <div className="w-full px-2 sm:px-4">
+        <div className="w-full max-w-none space-y-2">
+          <div className="w-full rounded-2xl border border-blue-200 bg-blue-50 overflow-hidden">
+            <textarea
+              ref={textareaRef}
+              value={editText}
+              onChange={(e) => {
+                setEditText(e.target.value);
+                adjustTextareaHeight();
+              }}
+              onKeyDown={handleKeyPress}
+              className="w-full p-3 sm:p-4 bg-transparent border-none resize-none focus:outline-none text-sm sm:text-base"
+              placeholder="Edit pesan Anda..."
+              style={{
+                minHeight: "60px",
+                maxHeight: "300px",
+                fontFamily: "inherit",
+              }}
+            />
+          </div>
+
+          <div className="flex items-center justify-end space-x-3">
+            <button
+              onClick={handleSaveEdit}
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors disabled:opacity-50"
+              disabled={!editText.trim()}
+            >
+              <Check className="w-4 h-4" />
+              <span>Simpan</span>
+            </button>
+            <button
+              onClick={handleCancelEdit}
+              className="flex items-center space-x-2 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+            >
+              <X className="w-4 h-4" />
+              <span>Batal</span>
+            </button>
+          </div>
+
+          <p className="text-xs text-gray-500 px-1 text-center">
+            Tekan Enter untuk simpan, Esc untuk batal
+          </p>
+        </div>
       </div>
+    );
+  }
 
+  return (
+    <>
       <div
-        className={`flex-1 min-w-0 max-w-[280px] sm:max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl ${
-          isUser ? "text-right pr-2 pt-1" : ""
+        className={`flex items-start space-x-2 sm:space-x-3 group ${
+          isUser ? "flex-row-reverse space-x-reverse" : ""
         }`}
       >
-        <div className="relative">
-          {isEditing ? (
-            <div className="space-y-2">
-              <div
-                className={`inline-block rounded-2xl max-w-full ${
-                  isUser
-                    ? "bg-blue-50 border border-blue-200"
-                    : "bg-gray-50 border border-gray-200"
-                }`}
-              >
-                <textarea
-                  ref={textareaRef}
-                  value={editText}
-                  onChange={(e) => {
-                    setEditText(e.target.value);
-                    adjustTextareaHeight();
-                  }}
-                  onKeyDown={handleKeyPress}
-                  className="w-full p-2 sm:p-3 bg-transparent border-none resize-none focus:outline-none text-xs sm:text-sm rounded-2xl"
-                  placeholder="Edit pesan Anda..."
-                  style={{ minHeight: "40px", maxHeight: "200px" }}
-                />
-              </div>
-
-              <div
-                className={`flex items-center space-x-2 ${
-                  isUser ? "justify-end" : "justify-start"
-                }`}
-              >
-                <button
-                  onClick={handleSaveEdit}
-                  className="flex items-center space-x-1 px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs rounded-md transition-colors"
-                  disabled={!editText.trim()}
-                >
-                  <span>Simpan</span>
-                </button>
-                <button
-                  onClick={handleCancelEdit}
-                  className="flex items-center space-x-1 px-2 py-1 bg-red-400 hover:bg-red-500 text-white text-xs rounded-md transition-colors"
-                >
-                  <span>Batal</span>
-                </button>
-              </div>
-
-              <p className="text-xs text-gray-400 px-1">
-                Tekan Enter untuk simpan, Esc untuk batal
-              </p>
-            </div>
+        <div
+          className={`flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center ${
+            message.sender === "ai"
+              ? "bg-gradient-to-r from-blue-500 to-indigo-600"
+              : "bg-gradient-to-r from-gray-500 to-gray-600"
+          }`}
+        >
+          {message.sender === "ai" ? (
+            <Bot className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
           ) : (
+            <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+          )}
+        </div>
+
+        <div
+          className={`flex-1 min-w-0 max-w-[280px] sm:max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl ${
+            isUser ? "text-right pr-2 pt-1" : ""
+          }`}
+        >
+          <div className="relative">
             <div>
               {/* Container dengan flex untuk bubble dan action buttons */}
               <div
@@ -651,21 +654,24 @@ const Message = ({ message, onEditMessage, isLastUserMessage }) => {
                 </div>
               </div>
 
-              {message.isRegenerated && (
-                <div className="flex items-center space-x-1 mt-1 text-xs ">
-                  <RotateCcw className="w-3 h-3" />
-                  <span>Pertanyaan diperbarui</span>
-                </div>
-              )}
-
               <p className="text-xs text-gray-500 mt-1 px-1 sm:px-2">
                 {formatTime(message.timestamp)}
               </p>
             </div>
-          )}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Indikator "Pertanyaan diperbarui" - sebagai elemen terpisah yang benar-benar di tengah */}
+      {message.isRegenerated && (
+        <div className="w-full flex justify-center mt-1 mb-2">
+          <div className="flex items-center text-xs text-amber-600 bg-amber-50 rounded-full px-3 py-1 border border-amber-200 shadow-sm">
+            <RotateCcw className="w-3 h-3 mr-1" />
+            <span>Pertanyaan diperbarui</span>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
