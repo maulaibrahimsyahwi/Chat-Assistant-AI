@@ -132,7 +132,6 @@ const Sidebar = ({
       icon: Settings,
       label: "Pengaturan",
       action: () => {
-        console.log("Settings clicked");
         handleMenuNavigation("settings");
       },
       color: "text-gray-400 hover:text-gray-500 hover:bg-gray-50",
@@ -143,7 +142,6 @@ const Sidebar = ({
       icon: HelpCircle,
       label: "Bantuan",
       action: () => {
-        console.log("Help clicked");
         handleMenuNavigation("help");
       },
       color: "text-gray-600 hover:text-gray-700 hover:bg-gray-50",
@@ -188,7 +186,6 @@ const Sidebar = ({
         onDeleteAllChats();
       }
       setDeleteAllConfirm(false);
-      console.log("All chat histories deleted successfully from Sidebar");
     } catch (error) {
       console.error("Error deleting all chats:", error);
       setDeleteAllConfirm(false);

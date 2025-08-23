@@ -409,8 +409,6 @@ const ChatContainer = () => {
 
       // Clear current chat jika ada
       clearChat();
-
-      console.log("All chat histories deleted successfully");
     } catch (error) {
       console.error("Error deleting all chat histories:", error);
     }
