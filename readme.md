@@ -27,13 +27,32 @@
   </tbody>
 </table>
 
-> ⚠️ **Peringatan:** Proyek ini menggunakan arsitektur **frontend-backend terpisah** dengan alasan-alasan penting berikut:
+> ⚠️ **Peringatan:** Proyek ini menggunakan arsitektur **frontend-backend terpisah** dengan alasan-alasan penting berikut
 
 #### 🔐 **Keamanan API Key**
 
-**Environment Variables** di frontend dapat diakses oleh client (browser)
-**API Keys** seperti `REPLICATE_API_TOKEN` akan terekspos di bundle JavaScript
-**Backend terpisah** menjaga keamanan credentials di server-side only
+<table>
+  <thead>
+    <tr>
+      <th>Komponen Keamanan</th>
+      <th>Alasan</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Environment Variables</b></td>
+      <td>Digunakan di React dan Vercel untuk mencegah eksposur sensitif data ke sisi klien (browser).</td>
+    </tr>
+    <tr>
+      <td><b>API Keys</b></td>
+      <td>Seperti <code>REPLICATE_API_TOKEN</code> akan terekspos di bundle JavaScript, sehingga perlu dihindari di sisi klien.</td>
+    </tr>
+    <tr>
+      <td><b>Backend terpisah</b></td>
+      <td>Menjaga keamanan kredensial dengan menyimpannya hanya di sisi server.</td>
+    </tr>
+  </tbody>
+</table>
 
 #### ⚙️ **Masalah Deployment Vercel**
 
@@ -96,18 +115,33 @@ cd Chat-Assistant-AI
 # Install dependencies
 npm install
 
-# Setup environment variables (opsional)
-cp .env.example .env
+# Setup required package.json
+cp frontend
+
+# setup Package.json di folder frontend
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "@vercel/speed-insights": "^1.2.0",
+    "groq-sdk": "^0.30.0",  #(opsional jika ingin menggunakan dari groq)
+    "gsap": "^3.13.0",
+    "katex": "^0.16.22",
+    "lucide-react": "^0.539.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-katex": "^3.1.0",
+    "react-markdown": "^10.1.0",
+    "tailwindcss": "^4.1.11"
+  },
 ```
 
 **Konfigurasi .env (Frontend - Aman):**
 
 ```env
-# ✅ Hanya URL endpoint backend - AMAN untuk frontend
+# ✅ Hanya URL endpoint backend - AMAN untuk frontend lokal server
 VITE_API_BASE_URL=http://localhost:3000/api
 VITE_APP_NAME=Chat Assistant AI
 
-# ❌ JANGAN PERNAH simpan API keys di frontend!
+# ❌ JANGAN PERNAH simpan API keys di frontend jika ingin dideploy!
 # VITE_REPLICATE_API_TOKEN=xxx  # BAHAYA! Akan terekspos di browser
 ```
 
@@ -154,17 +188,59 @@ export const sendMessage = async (message) => {
 
 #### Frontend
 
-- **React 19**
-- **Vite**
-- **Tailwind CSS**
-- **Lucide React**
-- **GSAP**
-- **React Markdown**
-- **React KaTeX**
+<table>
+  <thead>
+    <tr>
+      <th>React 19</th>
+      <th>Vite</th>
+      <th>Tailwind CSS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Lucide React</td>
+      <td>GSAP</td>
+      <td>React Markdown</td>
+    </tr>
+    <tr>
+      <td>React KaTeX</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
 ### Backend (Repository Terpisah)
 
-**Node.js** **,** **Express.js** **,** **Replicate API** **,** **IBM Granite 3.3**
+<style>
+  /* Menambahkan garis bawah pada header tabel */
+  th {
+    border-bottom: 2px solid #000;
+  }
+  
+  /* Menambahkan garis bawah pada setiap baris data */
+  td {
+    border-bottom: 1px solid #ddd;
+  }
+</style>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="2">Teknologi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Node.js</td>
+      <td>Express.js</td>
+    </tr>
+    <tr>
+      <td>Replicate API</td>
+      <td>IBM Granite 3.3</td>
+    </tr>
+  </tbody>
+</table>
 
 > Backend stack lengkap tersedia di [api-key-replicate](https://github.com/maulaibrahimsyahwi/api-key-replicate)
 
@@ -190,7 +266,7 @@ export const sendMessage = async (message) => {
 
 3. **Environment Variables di Vercel:**
    ```
-   VITE_API_BASE_URL=https://your-backend-api.com/api
+   REPLICATE_API_TOKEN=r8-xxxxxxxxxxxxxxxxxxxxx
    ```
 
 ##### Backend Deployment
@@ -214,7 +290,18 @@ const allowedOrigins = [
 
 #### 🔒 **Security Benefits:**
 
-**API Keys** **,** **Environment variables** **,** **CORS protection** **,** **Rate limiting**
+<table>
+  <tbody>
+    <tr>
+      <td>API Keys</td>
+      <td>Environment variables</td>
+    </tr>
+    <tr>
+      <td>CORS protection</td>
+      <td>Rate limiting</td>
+    </tr>
+  </tbody>
+</table>
 
 #### ⚙️ Konfigurasi
 
@@ -269,7 +356,23 @@ export default defineConfig({
 });
 ```
 
-### 📋 Related Repositories
+#### 📋 Related Repositories
 
-- **Frontend**: [Chat-Assistant-AI](https://github.com/maulaibrahimsyahwi/Chat-Assistant-AI) (Repository ini)
-- **Backend**: [api-key-replicate](https://github.com/maulaibrahimsyahwi/api-key-replicate) - Node.js API server dengan Replicate integration
+<table>
+  <thead>
+    <tr>
+      <th>Komponen</th>
+      <th>Repositori</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Frontend</td>
+      <td><a href="https://github.com/maulaibrahimsyahwi/Chat-Assistant-AI">Chat-Assistant-AI</a> (Repositori ini)</td>
+    </tr>
+    <tr>
+      <td>Backend</td>
+      <td><a href="https://github.com/maulaibrahimsyahwi/api-key-replicate">api-key-replicate</a> - Node.js API server dengan Replicate integration</td>
+    </tr>
+  </tbody>
+</table>
