@@ -106,7 +106,7 @@ const Sidebar = ({
       icon: Plus,
       label: "Chat Baru",
       action: onNewChat,
-      color: "text-green-600 hover:text-green-700 hover:bg-green-50",
+      color: "text-blue-600 hover:text-blue-700 hover:bg-blue-50",
       active: true,
     },
     {
