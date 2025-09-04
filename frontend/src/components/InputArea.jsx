@@ -1,21 +1,29 @@
+// src/components/InputArea.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { SendHorizonal } from "lucide-react";
+import { TEXTAREA_STYLE } from "../constants";
+
 const InputArea = ({ onSendMessage, isLoading }) => {
   const [inputText, setInputText] = useState("");
   const inputRef = useRef(null);
 
-  // Auto-resize textarea function
   const adjustTextareaHeight = () => {
     const textarea = inputRef.current;
     if (textarea) {
       textarea.style.height = "auto";
-      const minHeight = window.innerWidth < 640 ? 36 : 40;
-      const maxHeight = window.innerWidth < 640 ? 120 : 200;
+      const minHeight =
+        window.innerWidth < 640
+          ? TEXTAREA_STYLE.MIN_HEIGHT_MOBILE
+          : TEXTAREA_STYLE.MIN_HEIGHT_DESKTOP;
+      const maxHeight =
+        window.innerWidth < 640
+          ? TEXTAREA_STYLE.MAX_HEIGHT_MOBILE
+          : TEXTAREA_STYLE.MAX_HEIGHT_DESKTOP;
       const newHeight = Math.min(
         Math.max(textarea.scrollHeight, minHeight),
         maxHeight
       );
-      textarea.style.height = newHeight + "px";
+      textarea.style.height = `${newHeight}px`;
     }
   };
 
@@ -23,13 +31,9 @@ const InputArea = ({ onSendMessage, isLoading }) => {
     adjustTextareaHeight();
   }, [inputText]);
 
-  // Handle window resize untuk menyesuaikan textarea
   useEffect(() => {
-    const handleResize = () => {
-      adjustTextareaHeight();
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener("resize", adjustTextareaHeight);
+    return () => window.removeEventListener("resize", adjustTextareaHeight);
   }, []);
 
   const handleTextChange = (e) => {
@@ -68,8 +72,14 @@ const InputArea = ({ onSendMessage, isLoading }) => {
             disabled={isLoading}
             style={{
               height: "auto",
-              minHeight: window.innerWidth < 640 ? "36px" : "40px",
-              maxHeight: window.innerWidth < 640 ? "120px" : "200px",
+              minHeight:
+                window.innerWidth < 640
+                  ? `${TEXTAREA_STYLE.MIN_HEIGHT_MOBILE}px`
+                  : `${TEXTAREA_STYLE.MIN_HEIGHT_DESKTOP}px`,
+              maxHeight:
+                window.innerWidth < 640
+                  ? `${TEXTAREA_STYLE.MAX_HEIGHT_MOBILE}px`
+                  : `${TEXTAREA_STYLE.MAX_HEIGHT_DESKTOP}px`,
             }}
           />
         </div>

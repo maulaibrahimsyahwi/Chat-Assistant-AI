@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from "react";
+// src/components/TextType/TextType.jsx
+import { useState, useEffect } from "react";
+import { TYPING_EFFECT } from "../../constants";
 
 const TextType = ({
   text,
   as: Component = "div",
-  typingSpeed = 40,
-  initialDelay = 0,
+  typingSpeed = TYPING_EFFECT.DEFAULT_SPEED,
+  initialDelay = TYPING_EFFECT.INITIAL_DELAY,
   loop = true,
   className = "",
   showCursor = true,
   cursorCharacter = "_",
   cursorClassName = "animate-pulse",
-  cursorBlinkDuration = 1,
+  cursorBlinkDuration = TYPING_EFFECT.CURSOR_BLINK_DURATION,
   onComplete = () => {},
 }) => {
   const [displayText, setDisplayText] = useState("");
@@ -20,19 +22,14 @@ const TextType = ({
 
   useEffect(() => {
     let timeoutId;
-
     const startTyping = () => {
       if (initialDelay > 0) {
-        timeoutId = setTimeout(() => {
-          setIsTyping(true);
-        }, initialDelay);
+        timeoutId = setTimeout(() => setIsTyping(true), initialDelay);
       } else {
         setIsTyping(true);
       }
     };
-
     startTyping();
-
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
@@ -42,27 +39,21 @@ const TextType = ({
     if (!isTyping) return;
 
     let timeoutId;
-
     const typeNextCharacter = () => {
       if (currentIndex < text.length) {
         setDisplayText((prev) => prev + text[currentIndex]);
         setCurrentIndex((prev) => prev + 1);
       } else {
-        // Typing selesai
         onComplete();
         if (loop) {
-          // Reset untuk loop
           setTimeout(() => {
             setDisplayText("");
             setCurrentIndex(0);
-          }, 2000);
-        } else {
-          // Sembunyikan cursor setelah selesai jika tidak loop
-          if (showCursor) {
-            setTimeout(() => {
-              setShowCursorState(false);
-            }, 2000);
-          }
+          }, TYPING_EFFECT.LOOP_DELAY);
+        } else if (showCursor) {
+          setTimeout(() => {
+            setShowCursorState(false);
+          }, TYPING_EFFECT.LOOP_DELAY);
         }
       }
     };
