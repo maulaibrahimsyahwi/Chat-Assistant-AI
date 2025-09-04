@@ -1,5 +1,5 @@
-// src/components/ChatContainer.jsx
 import React, { useState, useEffect, useRef } from "react";
+import localforage from "localforage";
 import MessageList from "./MessageList";
 import InputArea from "./InputArea";
 import { sendMessageToAI } from "../services/aiService";
@@ -20,16 +20,18 @@ const ChatContainer = () => {
   );
   const messagesEndRef = useRef(null);
 
-  // Load chat histories from localStorage on mount
+  // Load chat histories from localForage on mount
   useEffect(() => {
-    const savedHistories = localStorage.getItem("chatHistories");
-    if (savedHistories) {
-      try {
-        setChatHistories(JSON.parse(savedHistories));
-      } catch (error) {
-        console.error("Error loading chat histories:", error);
-      }
-    }
+    localforage
+      .getItem("chatHistories")
+      .then((savedHistories) => {
+        if (savedHistories && Array.isArray(savedHistories)) {
+          setChatHistories(savedHistories);
+        }
+      })
+      .catch((error) => {
+        console.error("Error loading chat histories from localForage:", error);
+      });
   }, []);
 
   // Auto-collapse sidebar on mobile
@@ -44,13 +46,12 @@ const ChatContainer = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  // Auto-scroll to bottom
-  const scrollToBottom = () => {
+  // Auto-scroll to bottom of messages
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-  useEffect(scrollToBottom, [messages]);
+  }, [messages]);
 
-  // Helper to update chat histories in state and localStorage
+  // Helper to update chat histories in state and async storage
   const updateChatHistories = (newChatData) => {
     setChatHistories((prev) => {
       const existingIndex = prev.findIndex(
@@ -68,12 +69,16 @@ const ChatContainer = () => {
         updatedHistories = updatedHistories.slice(0, CHAT_CONFIG.HISTORY_LIMIT);
       }
 
-      localStorage.setItem("chatHistories", JSON.stringify(updatedHistories));
+      // Asynchronous storage write - does not block the main thread
+      localforage.setItem("chatHistories", updatedHistories).catch((err) => {
+        console.error("Failed to save chat histories:", err);
+      });
+
       return updatedHistories;
     });
   };
 
-  // Helper to display API error message
+  // Helper to display API error message in chat
   const handleApiError = (error) => {
     console.error("Error:", error);
     const errorMessage = {
@@ -85,7 +90,7 @@ const ChatContainer = () => {
     setMessages((prev) => [...prev, errorMessage]);
   };
 
-  // Helper to save current chat state
+  // Helper to get a savable object of the current chat state
   const saveCurrentChat = () => {
     if (messages.length === 0) return null;
     const firstUserMessage = messages.find((m) => m.sender === "user");
@@ -115,7 +120,10 @@ const ChatContainer = () => {
     };
     const messagesBeforeEdit = messages.slice(0, messageIndex);
     const updatedMessagesWithUserEdit = [...messagesBeforeEdit, updatedMessage];
-    const conversationBeforeEdit = conversationHistory.slice(0, messageIndex);
+    const conversationBeforeEdit = conversationHistory.slice(
+      0,
+      messageIndex * 2
+    );
 
     setMessages(updatedMessagesWithUserEdit);
     setIsLoading(true);
@@ -140,17 +148,15 @@ const ChatContainer = () => {
       setMessages(finalMessages);
       setConversationHistory(newHistory.slice(-CHAT_CONFIG.HISTORY_MAX_LENGTH));
 
-      setTimeout(() => {
-        const chatData = createChatDataObject({
-          chatId: currentChatId,
-          currentTitle: currentChatTitle,
-          firstMessageText: newText,
-          messages: finalMessages,
-          conversationHistory: newHistory,
-          existingChat: chatHistories.find((c) => c.id === currentChatId),
-        });
-        updateChatHistories(chatData);
-      }, CHAT_CONFIG.SAVE_DELAY);
+      const chatData = createChatDataObject({
+        chatId: currentChatId,
+        currentTitle: currentChatTitle,
+        firstMessageText: newText,
+        messages: finalMessages,
+        conversationHistory: newHistory,
+        existingChat: chatHistories.find((c) => c.id === currentChatId),
+      });
+      updateChatHistories(chatData);
     } catch (error) {
       handleApiError(error);
     } finally {
@@ -163,10 +169,12 @@ const ChatContainer = () => {
     setShowWelcome(false);
 
     let tempChatId = currentChatId;
+    let tempChatTitle = currentChatTitle;
     if (messages.length === 0) {
       tempChatId = Date.now().toString();
+      tempChatTitle = generateChatTitle(inputText);
       setCurrentChatId(tempChatId);
-      setCurrentChatTitle(generateChatTitle(inputText));
+      setCurrentChatTitle(tempChatTitle);
     }
 
     const userMessage = {
@@ -198,20 +206,18 @@ const ChatContainer = () => {
       setMessages(finalMessages);
       setConversationHistory(newHistory.slice(-CHAT_CONFIG.HISTORY_MAX_LENGTH));
 
-      setTimeout(() => {
-        const chatData = createChatDataObject({
-          chatId: tempChatId,
-          currentTitle: generateChatTitle(inputText),
-          firstMessageText: inputText,
-          messages: finalMessages,
-          conversationHistory: newHistory,
-          existingChat: chatHistories.find((c) => c.id === tempChatId),
-        });
-        updateChatHistories(chatData);
-      }, CHAT_CONFIG.SAVE_DELAY);
+      const chatData = createChatDataObject({
+        chatId: tempChatId,
+        currentTitle: tempChatTitle,
+        firstMessageText: inputText,
+        messages: finalMessages,
+        conversationHistory: newHistory,
+        existingChat: chatHistories.find((c) => c.id === tempChatId),
+      });
+      updateChatHistories(chatData);
     } catch (error) {
       handleApiError(error);
-      setMessages(newMessages); // Rollback to only user message on error
+      setMessages(newMessages); // Rollback to only show user message on API error
     } finally {
       setIsLoading(false);
     }
@@ -249,8 +255,8 @@ const ChatContainer = () => {
 
   const deleteChatFromHistory = (chatId) => {
     const updatedHistories = chatHistories.filter((chat) => chat.id !== chatId);
-    localStorage.setItem("chatHistories", JSON.stringify(updatedHistories));
     setChatHistories(updatedHistories);
+    localforage.setItem("chatHistories", updatedHistories);
     if (currentChatId === chatId) {
       clearChat();
     }
@@ -258,7 +264,7 @@ const ChatContainer = () => {
 
   const deleteAllChatHistories = () => {
     setChatHistories([]);
-    localStorage.removeItem("chatHistories");
+    localforage.removeItem("chatHistories");
     clearChat();
   };
 
